@@ -9,6 +9,8 @@ Sycamore works on Python 3.10.
 Installation is simple. 
 1. Install NLTK (preferably with pip). `pip install nltk`
 2. Install CherryPy (preferably with pip). `pip install cherrypy`
+3. Download or clone this repository and navigate to the repository in Terminal. `cd Downloads/sycamore`
+Now you are ready to use sycamore.
 
 # Use
 
