@@ -53,8 +53,8 @@ class TreeDraw(object):
     def pretty_tree(self, tree):
         t = Tree.fromstring(tree)
         s = t.pformat()
-        if s.startswith('(\n'):
-            s='(' + str(s[2:])
+        #if s.startswith('(\n'):
+            #s='(' + str(s[2:])
         return s
 
     def pretty_trees(self, trees):
@@ -69,7 +69,7 @@ class TreeDraw(object):
         #for later implementation: add in timestamp to filenames
 #        rightnow = datetime.now()
 #        rightnow_string = rightnow.strftime("%Y.%m.%d.%H.%M.%S")
-        with open(self.filename,'w',encoding='utf-8') as f:
+        with open((self.filename[0:-4]+"-edited.txt"),'w',encoding='utf-8') as f:
             tosave = trees.strip()#[1:-1]
             tosave = self.pretty_trees(tosave)
             # f.write(tosave.encode("utf8"))
@@ -82,8 +82,8 @@ class TreeDraw(object):
     @cherrypy.expose
     def doExit(self):
         print ("Exit message received")
-        #os._exit(0)
-        cherrypy.engine.exit()
+        os._exit(0)
+        #cherrypy.engine.exit()
 
 
     def loadPsd(self, fileName):
@@ -98,8 +98,6 @@ class TreeDraw(object):
         alltrees = '<div class="snode">'
         for tree in trees:
             tree0 = tree.strip()
-            tree0 = re.sub('^\(','',tree0)
-            tree0 = re.sub('\)$','',tree0).strip()
             tree0 = re.sub('\((['+allchars+']+) (['+allchars+']+)\)','<div class="snode">\\1<span class="wnode">\\2</span></div>',tree0)
             tree0 = re.sub('\(','<div class="snode">',tree0)
             tree0 = re.sub('\)','</div>',tree0)		
@@ -112,16 +110,16 @@ class TreeDraw(object):
     @cherrypy.expose
     def error(self):
         return("""<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
-<html>
-<head>  <title>Annotald X</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <style type='text/css'>
-       body, input {
-           font-family: verdana;
-       }
-    </style>
-</head>  
-<body>
+                        <html>
+                        <head>  <title>Annotald X</title>
+                        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                            <style type='text/css'>
+                               body, input {
+                                   font-family: verdana;
+                               }
+                            </style>
+                        </head>  
+                        <body>
 
 <div style='text-align:center;font-weight:bold;'>Annotald Error. Please load a file.</div>
 
@@ -148,35 +146,38 @@ class TreeDraw(object):
         else:
             print("Usage: annotald [settingsFile.js] file.psd")
         
-        return """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
-<html>
-<head>  <title>Sycamore Beta</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        return """
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+        <html>
+        <head>  <title>Sycamore Beta</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="stylesheet" type="text/css" href="/static/css/treedrawing.css" type="text/css"></link>
-    <script type= "application/javascript"/>"""+ currentSettings + """    </script>
+        <script type= "application/javascript"/>"""+ currentSettings + """    </script>
 	<script type= "application/javascript" src="/static/scripts/jquery.js"/></script>		
 	<script type= "application/javascript" src="/static/scripts/treedrawing.js"/></script>		
 	<script type= "application/javascript" src="/static/scripts/treedrawing.contextMenu.js"/></script>		
 
-</head>
-<body oncontextmenu="return false;">
-<div style="display:none"><span>Sel1: </span><span id="labsel1">null</span></div>
-<div style="display:none"><span>Sel2: </span><span id="labsel2">null</span></div>
+        </head>
+        
+        <body oncontextmenu="return false;">
+        <div style="display:none"><span>Sel1: </span><span id="labsel1">null</span></div>
+        <div style="display:none"><span>Sel2: </span><span id="labsel2">null</span></div>
 
-<br />
+        <br />
 
-<div id="floatMenu">
-<div style="background-color: #2E2E2E; color: white; font-weight: bold;">Sycamore Beta</div>
+        <div id="floatMenu">
+        <div style="background-color: #2E2E2E; color: white; font-weight: bold;">Sycamore Beta</div>
 
-Editing: """+os.path.basename(self.thefile)+""" <br />
-<input class="menubutton" type="button" value="Save" id="butsave"><br />
-<input class="menubutton" type="button" value="Undo" id="butundo"><br />
-<input class="menubutton" type="button" value="Redo" id="butredo"><br />
-<input class="menubutton" type="button" value="Exit" id="butclose"><br />
+        Editing: """+os.path.basename(self.thefile)+""" <br />
+        <input class="menubutton" type="button" value="Save" id="butsave"><br />
+        <input class="menubutton" type="button" value="Undo" id="butundo"><br />
+        <input class="menubutton" type="button" value="Redo" id="butredo"><br />
+        <input class="menubutton" type="button" value="Exit" id="butclose"><br />
 
-<div id="debugpane">x</div>
-</div>
-<div id="editpane">"""+currentTree+"""</div>
+        <div id="debugpane">x</div>
+        </div>
+        
+        <div id="editpane">"""+currentTree+"""</div>
 
 
 		<div id="conMenu">		
