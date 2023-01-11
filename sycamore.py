@@ -53,31 +53,29 @@ class TreeDraw(object):
     def pretty_tree(self, tree):
         t = Tree.fromstring(tree)
         s = t.pformat()
-        #if s.startswith('(\n'):
-            #s='(' + str(s[2:])
+        if s.startswith('(\n'):
+            s='(' + str(s[2:])
         return s
 
     def pretty_trees(self, trees):
-        trees = trees.replace('\n','')
-        treelist = re.sub(r'\)\s*\)\(\s*\(','))\n((',trees)
-        treelist = treelist.split('\n')
-        treelist = [self.pretty_tree(t) for t in treelist]
-        return '\n\n'.join(treelist)
+        #trees = trees.replace('\n','')
+        #treelist = re.sub(r'\)\s*\)\(\s*\(','))\n((',trees) #this seems to be adding extra parentheses
+        treelist = trees
+        #treelist = treelist.split('\n')
+        #treelist = [self.pretty_tree(t) for t in treelist]
+        #return '\n\n'.join(treelist)
+        return treelist
 
     @cherrypy.expose
-    def doSave(self, trees=None):
-        #for later implementation: add in timestamp to filenames
-#        rightnow = datetime.now()
-#        rightnow_string = rightnow.strftime("%Y.%m.%d.%H.%M.%S")
+    def doSave(self, trees):
+                    #for later implementation: add in timestamp to filenames
+                    #        rightnow = datetime.now()
+                    #        rightnow_string = rightnow.strftime("%Y.%m.%d.%H.%M.%S")
         with open((self.filename[0:-4]+"-edited.txt"),'w',encoding='utf-8') as f:
-            tosave = trees.strip()#[1:-1]
+            tosave = trees.strip()
             tosave = self.pretty_trees(tosave)
-            # f.write(tosave.encode("utf8"))
             f.write(tosave)
             f.close()
-            #os.system('java -classpath ~/icecorpus/parsing/CS_Tony_oct19.jar csearch.CorpusSearch ~/icecorpus/treedrawing/nothing.q '+self.thefile)
-            #os.system('mv '+self.thefile+'.out '+self.thefile)
-
 
     @cherrypy.expose
     def doExit(self):
